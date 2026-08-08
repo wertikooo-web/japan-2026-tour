@@ -11,7 +11,27 @@
     :root{--red:#e60012;--ink:#050505;--paper:#fffdf8}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--ink);font-family:Inter,Arial,sans-serif}.display{font-family:'Bebas Neue',Impact,sans-serif;letter-spacing:.035em}.marker{font-family:'Permanent Marker',cursive}.comic{border:3px solid #000;box-shadow:6px 6px 0 #000}.comic-thin{border:2px solid #000}.dots{background-image:radial-gradient(#1a1a1a 1px,transparent 1px);background-size:7px 7px}.speed{background:repeating-linear-gradient(108deg,#000 0 1px,transparent 1px 10px)}.hero{position:relative;overflow:hidden;background:#fff}.hero:after{content:'';position:absolute;inset:0;opacity:.1;background:repeating-linear-gradient(25deg,#000 0 2px,transparent 2px 17px);pointer-events:none}.hero>*{position:relative;z-index:1}.burst{clip-path:polygon(50% 0,57% 36%,73% 8%,68% 40%,100% 30%,72% 49%,98% 58%,68% 58%,88% 91%,60% 66%,54% 100%,47% 68%,20% 90%,38% 62%,0 68%,33% 51%,3% 30%,40% 40%);background:var(--red);color:#fff;display:grid;place-items:center;text-align:center;font-weight:800;line-height:1.05}.bubble{position:relative;border:3px solid #000;border-radius:48%;background:#fff;padding:1rem 1.3rem}.bubble:after{content:'';position:absolute;bottom:-16px;left:22%;width:25px;height:25px;background:#fff;border-right:3px solid #000;border-bottom:3px solid #000;transform:skew(-25deg) rotate(18deg)}.chapter[hidden]{display:none}.day-tab{border:2px solid #000;background:#fff;padding:.55rem .8rem;font-weight:800;font-size:.83rem}.day-tab[aria-selected="true"]{background:#000;color:#fff}.panel-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:12px}.panel-grid>*{border:2px solid #000;padding:1rem}.ink{background:#000;color:#fff}.red{background:var(--red);color:#fff}.red:hover{background:#b8000e}.icon-box{font-size:2rem;border:2px solid #000;display:grid;place-items:center;aspect-ratio:1}.check li{padding-left:1.6rem;position:relative;margin:.5rem 0}.check li:before{content:'✓';position:absolute;left:0;font-weight:900;color:var(--red)}details summary{cursor:pointer;list-style:none}details summary::-webkit-details-marker{display:none}.arrow{float:right;font-size:1.5rem;line-height:.75}@media(max-width:700px){.panel-grid{grid-template-columns:1fr}.comic{box-shadow:4px 4px 0 #000}.hero h1{font-size:4rem!important}.desktop-only{display:none}}
     .dots{background-color:#fff;background-image:radial-gradient(rgba(0,0,0,.20) .6px,transparent .7px);background-size:10px 10px}
   </style>
-<style>.burst{clip-path:none!important;border:3px solid #000!important;transform:rotate(2deg)!important;width:min(100%,330px)!important;height:auto!important;min-height:190px!important;padding:28px!important}@media(max-width:700px){.burst{min-height:160px!important;transform:none!important}.burst .display{font-size:2rem!important}}</style></head>
+<style>.burst{clip-path:none!important;border:3px solid #000!important;transform:rotate(2deg)!important;width:min(100%,330px)!important;height:auto!important;min-height:190px!important;padding:28px!important}@media(max-width:700px){.burst{min-height:160px!important;transform:none!important}.burst .display{font-size:2rem!important}}</style><style>
+@media (max-width:700px){
+  html,body{width:100%;max-width:100%;overflow-x:hidden}
+  body{font-size:16px}
+  section{max-width:100vw}
+  .hero h1{font-size:clamp(3.25rem,16vw,4.5rem)!important;line-height:.86!important;overflow-wrap:anywhere}
+  h2.display{font-size:clamp(2.45rem,12vw,3.4rem)!important;line-height:.9!important}
+  h3.display{font-size:clamp(2rem,10vw,3rem)!important;line-height:.92!important}
+  .comic,.comic-thin{max-width:100%;box-shadow:3px 3px 0 #000}
+  .panel-grid{grid-template-columns:minmax(0,1fr)!important;gap:10px}
+  .panel-grid>*{min-width:0}
+  .panel-grid img{width:100%!important;min-height:210px!important;height:210px!important;object-fit:cover}
+  .day-tab{flex:0 0 auto;white-space:nowrap;font-size:.72rem;padding:.55rem .65rem}
+  #route .overflow-x-auto{-webkit-overflow-scrolling:touch;padding-bottom:10px}
+  #chapters,.chapter{min-width:0;overflow:hidden}
+  #guides .flex{align-items:flex-start}
+  #guides .icon-box{width:52px;flex-basis:52px;font-size:1.45rem}
+  #request h2{font-size:clamp(3.1rem,15vw,4.8rem)!important}
+  .burst{width:100%!important;max-width:330px!important;margin:auto}
+}
+</style></head>
 <body>
   <header class="sticky top-0 z-50 border-b-2 border-black bg-white/95 backdrop-blur">
     <div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-3"><a href="#top" class="display text-2xl">JAPAN <span class="text-red-600">2026</span></a><nav class="desktop-only flex gap-5 text-sm font-bold"><a href="#route">маршрут</a><a href="#guides">проводники</a><a href="#included">условия</a></nav><a href="#request" class="comic-thin red px-4 py-2 text-xs font-extrabold">ХОЧУ В ГРУППУ</a></div>
