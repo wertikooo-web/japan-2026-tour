@@ -1,0 +1,37 @@
+name: Repair route tabs
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    if: "!contains(github.event.head_commit.message, '[tabs-repaired]')"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch chapter navigation
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+          marker = '<!-- robust-tabs-v1 -->'
+          if marker not in s:
+              patch = r'''\n<!-- robust-tabs-v1 -->\n<script>\n(function(){\n  function activateChapter(day, button){\n    document.querySelectorAll('.chapter[data-chapter]').forEach(function(chapter){\n      chapter.hidden = chapter.dataset.chapter !== String(day);\n    });\n    document.querySelectorAll('.day-tab').forEach(function(tab){\n      tab.setAttribute('aria-selected','false');\n      tab.classList.remove('red');\n    });\n    if(button){\n      button.setAttribute('aria-selected','true');\n      if(String(day)==='3') button.classList.add('red');\n      var label=document.getElementById('chapter-label');\n      if(label) label.textContent=button.textContent.replace('★ ','ДЕНЬ ');\n    }\n    document.querySelectorAll('.chapter video').forEach(function(video){\n      var chapter=video.closest('.chapter');\n      if(chapter && !chapter.hidden){\n        video.muted=true;\n        var playPromise=video.play();\n        if(playPromise && playPromise.catch) playPromise.catch(function(){});\n      } else {\n        try{video.pause();}catch(e){}\n      }\n    });\n  }\n  window.showChapter=activateChapter;\n  document.addEventListener('click',function(e){\n    var button=e.target.closest('.day-tab');\n    if(!button) return;\n    e.preventDefault();\n    var m=(button.getAttribute('onclick')||'').match(/showChapter\\(['\"]([^'\"]+)/);\n    var day=m?m[1]:null;\n    if(day!==null) activateChapter(day,button);\n  },true);\n})();\n</script>\n'''
+              s = s.replace('</body>', patch + '\n</body>')
+              p.write_text(s, encoding='utf-8')
+          PY
+      - name: Remove one-time workflow
+        run: rm -f .github/workflows/repair-tabs.yml
+      - name: Commit repaired site
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html .github/workflows/repair-tabs.yml
+          git diff --cached --quiet && exit 0
+          git commit -m "Fix route chapter navigation [tabs-repaired]"
+          git push
