@@ -1,7 +1,7 @@
 (function(){
   var soundOn=false;
   var currentLang=localStorage.getItem('japan2026-language')||'ru';
-  var videoDays=['0','1','2','4','5','6','7','8','9'];
+  var videoDays=['0','1','2','3','4','5','6','7','8','9'];
 
   var T={
     ru:{
