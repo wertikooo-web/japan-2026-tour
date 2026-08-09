@@ -14,9 +14,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Replace malformed navigation patch
+        env:
+          PATCH_B64: PCEtLSByb2J1c3QtdGFicy12MiAtLT4KPHNjcmlwdD4KKGZ1bmN0aW9uKCl7CiAgZnVuY3Rpb24gYWN0aXZhdGVDaGFwdGVyKGRheSwgYnV0dG9uKXsKICAgIGRheT1TdHJpbmcoZGF5KTsKICAgIGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3JBbGwoJy5jaGFwdGVyW2RhdGEtY2hhcHRlcl0nKS5mb3JFYWNoKGZ1bmN0aW9uKGNoYXB0ZXIpewogICAgICBjaGFwdGVyLmhpZGRlbiA9IGNoYXB0ZXIuZGF0YXNldC5jaGFwdGVyICE9PSBkYXk7CiAgICB9KTsKICAgIGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3JBbGwoJy5kYXktdGFiJykuZm9yRWFjaChmdW5jdGlvbih0YWIpewogICAgICB0YWIuc2V0QXR0cmlidXRlKCdhcmlhLXNlbGVjdGVkJywnZmFsc2UnKTsKICAgICAgdGFiLmNsYXNzTGlzdC5yZW1vdmUoJ3JlZCcpOwogICAgfSk7CiAgICBpZihidXR0b24pewogICAgICBidXR0b24uc2V0QXR0cmlidXRlKCdhcmlhLXNlbGVjdGVkJywndHJ1ZScpOwogICAgICBpZihkYXk9PT0nMycpIGJ1dHRvbi5jbGFzc0xpc3QuYWRkKCdyZWQnKTsKICAgICAgdmFyIGxhYmVsPWRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCdjaGFwdGVyLWxhYmVsJyk7CiAgICAgIGlmKGxhYmVsKSBsYWJlbC50ZXh0Q29udGVudD1idXR0b24udGV4dENvbnRlbnQucmVwbGFjZSgn4piFICcsJ9CU0JXQndCsICcpOwogICAgfQogICAgZG9jdW1lbnQucXVlcnlTZWxlY3RvckFsbCgnLmNoYXB0ZXIgdmlkZW8nKS5mb3JFYWNoKGZ1bmN0aW9uKHZpZGVvKXsKICAgICAgdmFyIGNoYXB0ZXI9dmlkZW8uY2xvc2VzdCgnLmNoYXB0ZXInKTsKICAgICAgaWYoY2hhcHRlciAmJiAhY2hhcHRlci5oaWRkZW4pewogICAgICAgIHZpZGVvLm11dGVkPXRydWU7CiAgICAgICAgdHJ5e3ZhciBwcD12aWRlby5wbGF5KCk7aWYocHAmJnBwLmNhdGNoKXBwLmNhdGNoKGZ1bmN0aW9uKCl7fSk7fWNhdGNoKGUpe30KICAgICAgfWVsc2V7CiAgICAgICAgdHJ5e3ZpZGVvLnBhdXNlKCk7fWNhdGNoKGUpe30KICAgICAgfQogICAgfSk7CiAgfQogIHdpbmRvdy5zaG93Q2hhcHRlcj1hY3RpdmF0ZUNoYXB0ZXI7CiAgZG9jdW1lbnQucXVlcnlTZWxlY3RvckFsbCgnLmRheS10YWInKS5mb3JFYWNoKGZ1bmN0aW9uKGJ1dHRvbil7CiAgICBidXR0b24ub25jbGljaz1mdW5jdGlvbihldmVudCl7CiAgICAgIGlmKGV2ZW50KSBldmVudC5wcmV2ZW50RGVmYXVsdCgpOwogICAgICB2YXIgdGV4dD1idXR0b24udGV4dENvbnRlbnQudHJpbSgpOwogICAgICB2YXIgZGF5PXRleHQuaW5kZXhPZign4piFJyk9PT0wPyczJzoodGV4dC5tYXRjaCgvXihbMC05XSspLyl8fFtdKVsxXTsKICAgICAgaWYoZGF5IT09dW5kZWZpbmVkKSBhY3RpdmF0ZUNoYXB0ZXIoZGF5LGJ1dHRvbik7CiAgICAgIHJldHVybiBmYWxzZTsKICAgIH07CiAgfSk7Cn0pKCk7Cjwvc2NyaXB0Pgo8L2JvZHk+PC9odG1sPgo=
         run: |
           python - <<'PY'
           from pathlib import Path
+          import os, base64
           p=Path('index.html')
           s=p.read_text(encoding='utf-8')
           marker='<!-- robust-tabs-v1 -->'
@@ -24,53 +27,9 @@ jobs:
               s=s[:s.index(marker)].rstrip()
               if s.endswith('\\n'):
                   s=s[:-2].rstrip()
-              if s.endswith('</body></html>'):
-                  s=s[:-14].rstrip()
           else:
               s=s.replace('</body></html>','').rstrip()
-          patch='''
-<!-- robust-tabs-v2 -->
-<script>
-(function(){
-  function activateChapter(day, button){
-    day=String(day);
-    document.querySelectorAll('.chapter[data-chapter]').forEach(function(chapter){
-      chapter.hidden = chapter.dataset.chapter !== day;
-    });
-    document.querySelectorAll('.day-tab').forEach(function(tab){
-      tab.setAttribute('aria-selected','false');
-      tab.classList.remove('red');
-    });
-    if(button){
-      button.setAttribute('aria-selected','true');
-      if(day==='3') button.classList.add('red');
-      var label=document.getElementById('chapter-label');
-      if(label) label.textContent=button.textContent.replace('★ ','ДЕНЬ ');
-    }
-    document.querySelectorAll('.chapter video').forEach(function(video){
-      var chapter=video.closest('.chapter');
-      if(chapter && !chapter.hidden){
-        video.muted=true;
-        try{var pp=video.play();if(pp&&pp.catch)pp.catch(function(){});}catch(e){}
-      }else{
-        try{video.pause();}catch(e){}
-      }
-    });
-  }
-  window.showChapter=activateChapter;
-  document.querySelectorAll('.day-tab').forEach(function(button){
-    button.onclick=function(event){
-      if(event) event.preventDefault();
-      var text=button.textContent.trim();
-      var day=text.indexOf('★')===0?'3':(text.match(/^([0-9]+)/)||[])[1];
-      if(day!==undefined) activateChapter(day,button);
-      return false;
-    };
-  });
-})();
-</script>
-</body></html>
-'''
+          patch=base64.b64decode(os.environ['PATCH_B64']).decode('utf-8')
           p.write_text(s+'\n'+patch,encoding='utf-8')
           PY
       - name: Remove one-time workflow
