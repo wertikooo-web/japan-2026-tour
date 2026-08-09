@@ -1,0 +1,37 @@
+name: Install Fuji video
+on:
+  push:
+    paths:
+      - '.github/workflows/install-fuji-video.yml'
+permissions:
+  contents: write
+jobs:
+  install:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Rebuild Fuji MP4
+        run: |
+          cat .fuji-micro/part-* | base64 -d > assets/day-3-v2.mp4
+          size=$(wc -c < assets/day-3-v2.mp4)
+          echo "Fuji video size: $size"
+          test "$size" -eq 8831
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('tabs.js')
+          s=p.read_text()
+          old="var videoDays=['0','1','2','4','5','6','7','8','9'];"
+          new="var videoDays=['0','1','2','3','4','5','6','7','8','9'];"
+          if old in s:
+              s=s.replace(old,new)
+          p.write_text(s)
+          PY
+      - name: Commit working video
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add assets/day-3-v2.mp4 tabs.js
+          git commit -m "Install working Fuji ascent video" || true
+          git push origin main
