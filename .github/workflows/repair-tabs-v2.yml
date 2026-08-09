@@ -1,0 +1,84 @@
+name: Repair route tabs v2
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    if: "!contains(github.event.head_commit.message, '[tabs-v2]')"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Replace malformed navigation patch
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text(encoding='utf-8')
+          marker='<!-- robust-tabs-v1 -->'
+          if marker in s:
+              s=s[:s.index(marker)].rstrip()
+              if s.endswith('\\n'):
+                  s=s[:-2].rstrip()
+              if s.endswith('</body></html>'):
+                  s=s[:-14].rstrip()
+          else:
+              s=s.replace('</body></html>','').rstrip()
+          patch='''
+<!-- robust-tabs-v2 -->
+<script>
+(function(){
+  function activateChapter(day, button){
+    day=String(day);
+    document.querySelectorAll('.chapter[data-chapter]').forEach(function(chapter){
+      chapter.hidden = chapter.dataset.chapter !== day;
+    });
+    document.querySelectorAll('.day-tab').forEach(function(tab){
+      tab.setAttribute('aria-selected','false');
+      tab.classList.remove('red');
+    });
+    if(button){
+      button.setAttribute('aria-selected','true');
+      if(day==='3') button.classList.add('red');
+      var label=document.getElementById('chapter-label');
+      if(label) label.textContent=button.textContent.replace('★ ','ДЕНЬ ');
+    }
+    document.querySelectorAll('.chapter video').forEach(function(video){
+      var chapter=video.closest('.chapter');
+      if(chapter && !chapter.hidden){
+        video.muted=true;
+        try{var pp=video.play();if(pp&&pp.catch)pp.catch(function(){});}catch(e){}
+      }else{
+        try{video.pause();}catch(e){}
+      }
+    });
+  }
+  window.showChapter=activateChapter;
+  document.querySelectorAll('.day-tab').forEach(function(button){
+    button.onclick=function(event){
+      if(event) event.preventDefault();
+      var text=button.textContent.trim();
+      var day=text.indexOf('★')===0?'3':(text.match(/^([0-9]+)/)||[])[1];
+      if(day!==undefined) activateChapter(day,button);
+      return false;
+    };
+  });
+})();
+</script>
+</body></html>
+'''
+          p.write_text(s+'\n'+patch,encoding='utf-8')
+          PY
+      - name: Remove one-time workflow
+        run: rm -f .github/workflows/repair-tabs-v2.yml
+      - name: Commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html .github/workflows/repair-tabs-v2.yml
+          git commit -m "Fix route tabs cleanly [tabs-v2]"
+          git push
