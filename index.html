@@ -134,44 +134,5 @@ window.stripTerminalPeriods=function(root=document){root.querySelectorAll('p,li'
 stripTerminalPeriods();
 new MutationObserver(function(){stripTerminalPeriods()}).observe(document.body,{subtree:true,childList:true,characterData:true});
 </script>
-<!-- robust-tabs-v2 -->
-<script>
-(function(){
-  function activateChapter(day, button){
-    day=String(day);
-    document.querySelectorAll('.chapter[data-chapter]').forEach(function(chapter){
-      chapter.hidden = chapter.dataset.chapter !== day;
-    });
-    document.querySelectorAll('.day-tab').forEach(function(tab){
-      tab.setAttribute('aria-selected','false');
-      tab.classList.remove('red');
-    });
-    if(button){
-      button.setAttribute('aria-selected','true');
-      if(day==='3') button.classList.add('red');
-      var label=document.getElementById('chapter-label');
-      if(label) label.textContent=button.textContent.replace('★ ','ДЕНЬ ');
-    }
-    document.querySelectorAll('.chapter video').forEach(function(video){
-      var chapter=video.closest('.chapter');
-      if(chapter && !chapter.hidden){
-        video.muted=true;
-        try{var pp=video.play();if(pp&&pp.catch)pp.catch(function(){});}catch(e){}
-      }else{
-        try{video.pause();}catch(e){}
-      }
-    });
-  }
-  window.showChapter=activateChapter;
-  document.querySelectorAll('.day-tab').forEach(function(button){
-    button.onclick=function(event){
-      if(event) event.preventDefault();
-      var text=button.textContent.trim();
-      var day=text.indexOf('★')===0?'3':(text.match(/^([0-9]+)/)||[])[1];
-      if(day!==undefined) activateChapter(day,button);
-      return false;
-    };
-  });
-})();
-</script>
+<script src="tabs.js?v=1"></script>
 </body></html>
