@@ -14,18 +14,9 @@
       var label=document.getElementById('chapter-label');
       if(label) label.textContent=button.textContent.replace('★ ','ДЕНЬ ');
     }
-    document.querySelectorAll('.chapter video').forEach(function(video){
-      var chapter=video.closest('.chapter');
-      if(chapter && !chapter.hidden){
-        video.muted=true;
-        try{var p=video.play();if(p&&p.catch)p.catch(function(){});}catch(e){}
-      }else{
-        try{video.pause();}catch(e){}
-      }
-    });
   }
   window.showChapter=activateChapter;
-  document.addEventListener('DOMContentLoaded',function(){
+  function bind(){
     document.querySelectorAll('.day-tab').forEach(function(button){
       button.onclick=function(e){
         if(e)e.preventDefault();
@@ -35,5 +26,9 @@
         return false;
       };
     });
-  });
+    var sound=document.getElementById('site-sound-toggle');
+    if(sound) sound.style.display='none';
+    document.querySelectorAll('[data-site-lang]').forEach(function(btn){btn.style.display='none';});
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',bind); else bind();
 })();
