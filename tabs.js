@@ -1,77 +1,81 @@
 (function(){
   var soundOn=false;
-  var currentLang='ru';
+  var currentLang=localStorage.getItem('japan2026-language')||'ru';
   var videoDays=['0','1','2','4','5','6','7','8','9'];
 
-  var translations={
-    en:{
-      'маршрут':'ROUTE','проводники':'GUIDES','условия':'DETAILS','ХОЧУ В ГРУППУ':'JOIN THE GROUP',
-      '7–15 СЕНТЯБРЯ 2026 • ДО 8 ЧЕЛОВЕК':'7–15 SEPTEMBER 2026 • UP TO 8 PEOPLE',
-      '9 дней от храмов Токио до самурайской Камакуры, от неона Синдзюку до миров цифрового искусства, от Фудзи до океанских островов':'9 days from Tokyo temples to samurai Kamakura, from Shinjuku neon to worlds of digital art, from Fuji to ocean islands',
-      'НАЧАТЬ ПРИКЛЮЧЕНИЕ →':'START THE ADVENTURE →','СМОТРЕТЬ ГЛАВЫ ↓':'VIEW THE CHAPTERS ↓',
-      'ТОКИО • ФУДЗИ • КАВАГУЧИКО • ЭНОСИМА • КАМАКУРА':'TOKYO • FUJI • KAWAGUCHIKO • ENOSHIMA • KAMAKURA',
-      'дней в Японии':'days in Japan','ночей в пути':'nights on the road','морских дня':'days by the sea','большая вершина':'great summit',
-      'собираем историю по кадрам':'collecting the story frame by frame','ГЛАВЫ МАРШРУТА':'ITINERARY CHAPTERS',
-      '0 · ПЕРЕЛЁТ':'0 · FLIGHT','1 · ТОКИО':'1 · TOKYO','2 · КАВАГУЧИКО':'2 · KAWAGUCHIKO','★ ФУДЗИ':'★ FUJI','4 · МЭЙДЗИ':'4 · MEIJI','5 · АСАКУСА':'5 · ASAKUSA','7 · ЭНОСИМА':'7 · ENOSHIMA','8 · КАМАКУРА':'8 · KAMAKURA','9 · ДОМОЙ':'9 · HOME',
-      'ДЕНЬ 0 · ПЕРЕЛЁТ':'DAY 0 · FLIGHT','ПЕРЕЛЁТ: ПОРТАЛ ОТКРЫТ':'FLIGHT: THE PORTAL OPENS','Вылет в Японию':'Flight to Japan',
-      'День дороги, отдыха и настройки внутреннего компаса на другой часовой пояс':'A travel day to rest and tune your inner compass to a new time zone',
-      'Завтра город заговорит неоном':'Tomorrow the city will speak in neon','ТОКИО: ПЕРВЫЙ КАДР':'TOKYO: THE FIRST FRAME',
-      'Прилёт → заселение → Уэно → Синдзюку':'Arrival → check-in → Ueno → Shinjuku',
-      'Мягко войдём в ритм Токио: парк Уэно, торговые улочки Амэёко и вечерний Синдзюку с экранами, небоскрёбами и 3D-котом':'Ease into Tokyo: Ueno Park, Ameyoko shopping streets and evening Shinjuku with screens, towers and its 3D cat',
-      'ФУДЗИ И КАВАГУЧИКО':'FUJI AND KAWAGUCHIKO','Токио → район Фудзи → озеро Кавагучико':'Tokyo → Fuji area → Lake Kawaguchiko',
-      'Открыточные виды из Oishi Park, прогулка у озера, опциональная лодка и музей кукол Юки Атаэ. Ночуем у Фудзи':'Postcard views from Oishi Park, a lakeside walk, an optional boat ride and the Yuki Atae Doll Museum. Overnight near Fuji',
-      'ВОСХОЖДЕНИЕ НА ФУДЗИ':'ASCENT OF MOUNT FUJI','ИДЕМ К ВЕРШИНЕ!':'WE CLIMB TO THE SUMMIT!','После возвращения: отдых и восстановление в традиционном японском доме в Кавагучико':'After the return: rest and recovery in a traditional Japanese house in Kawaguchiko',
-      'ТОКИО: ТИШИНА И НЕОН':'TOKYO: QUIET AND NEON','Кавагучико → Токио → Мэйдзи → Акихабара':'Kawaguchiko → Tokyo → Meiji → Akihabara',
-      'СТАРЫЙ ТОКИО / НОВЫЙ ТОКИО':'OLD TOKYO / NEW TOKYO','Асакуса → Skytree → Сибуя → Гинза':'Asakusa → Skytree → Shibuya → Ginza',
-      'БУДУЩЕЕ У ЗАЛИВА':'THE FUTURE BY THE BAY','ЭНОСИМА: ОСТРОВ ДРАКОНА':'ENOSHIMA: DRAGON ISLAND','Токио → Fujisawa → Enoshima → Hase':'Tokyo → Fujisawa → Enoshima → Hase',
-      'КАМАКУРА: БУДДА И МОРЕ':'KAMAKURA: BUDDHA AND SEA','ПРОВОДНИКИ':'GUIDES','ЧТО ВХОДИТ':"WHAT'S INCLUDED",'ОТДЕЛЬНО':'NOT INCLUDED',
-      'ИНВЕНТАРЬ ПУТЕШЕСТВЕННИКА':"TRAVELER'S KIT",'Для города, экскурсий и пляжа':'For the city, sightseeing and the beach','Для восхождения на Фудзи':'For the Mount Fuji ascent',
-      'ВАША ПОЕЗДКА В ЯПОНИЮ':'YOUR JAPAN JOURNEY','7–15 сентября 2026. Напишите нам, чтобы получить детали, стоимость и забронировать место в группе':'7–15 September 2026. Write to us for details, price and a place in the group',
-      'План может меняться из-за погоды, транспорта, часов работы мест и пожеланий группы':'The plan may change due to weather, transport, opening hours and the group’s wishes'
+  var cardTranslations={
+    '0':{
+      ru:['CHAPTER 0 • 6 сентября','ПЕРЕЛЁТ: ПОРТАЛ ОТКРЫТ','Вылет в Японию','День дороги, отдыха и настройки внутреннего компаса на другой часовой пояс.'],
+      en:['CHAPTER 0 • 6 September','FLIGHT: THE PORTAL OPENS','Flight to Japan','A travel day to rest and tune your inner compass to a new time zone.'],
+      ro:['CHAPTER 0 • 6 septembrie','ZBOR: PORTALUL SE DESCHIDE','Zbor spre Japonia','O zi de drum, odihnă și adaptare la un alt fus orar.']
     },
-    ro:{
-      'маршрут':'TRASEU','проводники':'GHIZI','условия':'DETALII','ХОЧУ В ГРУППУ':'VREAU ÎN GRUP',
-      '7–15 СЕНТЯБРЯ 2026 • ДО 8 ЧЕЛОВЕК':'7–15 SEPTEMBRIE 2026 • PÂNĂ LA 8 PERSOANE',
-      '9 дней от храмов Токио до самурайской Камакуры, от неона Синдзюку до миров цифрового искусства, от Фудзи до океанских островов':'9 zile de la templele din Tokyo la Kamakura samurailor, de la neonul din Shinjuku la lumile artei digitale, de la Fuji la insulele oceanului',
-      'НАЧАТЬ ПРИКЛЮЧЕНИЕ →':'ÎNCEPE AVENTURA →','СМОТРЕТЬ ГЛАВЫ ↓':'VEZI CAPITOLELE ↓',
-      'ТОКИО • ФУДЗИ • КАВАГУЧИКО • ЭНОСИМА • КАМАКУРА':'TOKYO • FUJI • KAWAGUCHIKO • ENOSHIMA • KAMAKURA',
-      'дней в Японии':'zile în Japonia','ночей в пути':'nopți în călătorie','морских дня':'zile la mare','большая вершина':'un mare vârf',
-      'собираем историю по кадрам':'adunăm povestea cadru cu cadru','ГЛАВЫ МАРШРУТА':'CAPITOLELE ITINERARULUI',
-      '0 · ПЕРЕЛЁТ':'0 · ZBOR','1 · ТОКИО':'1 · TOKYO','2 · КАВАГУЧИКО':'2 · KAWAGUCHIKO','★ ФУДЗИ':'★ FUJI','4 · МЭЙДЗИ':'4 · MEIJI','5 · АСАКУСА':'5 · ASAKUSA','7 · ЭНОСИМА':'7 · ENOSHIMA','8 · КАМАКУРА':'8 · KAMAKURA','9 · ДОМОЙ':'9 · ACASĂ',
-      'ДЕНЬ 0 · ПЕРЕЛЁТ':'ZIUA 0 · ZBOR','ПЕРЕЛЁТ: ПОРТАЛ ОТКРЫТ':'ZBOR: PORTALUL SE DESCHIDE','Вылет в Японию':'Zbor spre Japonia',
-      'День дороги, отдыха и настройки внутреннего компаса на другой часовой пояс':'O zi de drum, odihnă și adaptare la un alt fus orar',
-      'Завтра город заговорит неоном':'Mâine orașul va vorbi în neon','ТОКИО: ПЕРВЫЙ КАДР':'TOKYO: PRIMUL CADRU',
-      'Прилёт → заселение → Уэно → Синдзюку':'Sosire → cazare → Ueno → Shinjuku',
-      'Мягко войдём в ритм Токио: парк Уэно, торговые улочки Амэёко и вечерний Синдзюку с экранами, небоскрёбами и 3D-котом':'Intrăm ușor în ritmul Tokyo: parcul Ueno, străduțele Ameyoko și Shinjuku de seară cu ecrane, zgârie-nori și pisica 3D',
-      'ФУДЗИ И КАВАГУЧИКО':'FUJI ȘI KAWAGUCHIKO','Токио → район Фудзи → озеро Кавагучико':'Tokyo → zona Fuji → lacul Kawaguchiko',
-      'Открыточные виды из Oishi Park, прогулка у озера, опциональная лодка и музей кукол Юки Атаэ. Ночуем у Фудзи':'Priveliști de carte poștală din Oishi Park, plimbare pe lângă lac, barcă opțională și muzeul păpușilor Yuki Atae. Dormim lângă Fuji',
-      'ВОСХОЖДЕНИЕ НА ФУДЗИ':'ASCENSIUNEA PE FUJI','ИДЕМ К ВЕРШИНЕ!':'URCĂM SPRE VÂRF!','После возвращения: отдых и восстановление в традиционном японском доме в Кавагучико':'După întoarcere: odihnă și recuperare într-o casă japoneză tradițională din Kawaguchiko',
-      'ТОКИО: ТИШИНА И НЕОН':'TOKYO: LINIȘTE ȘI NEON','Кавагучико → Токио → Мэйдзи → Акихабара':'Kawaguchiko → Tokyo → Meiji → Akihabara',
-      'СТАРЫЙ ТОКИО / НОВЫЙ ТОКИО':'TOKYO VECHI / TOKYO NOU','Асакуса → Skytree → Сибуя → Гинза':'Asakusa → Skytree → Shibuya → Ginza',
-      'БУДУЩЕЕ У ЗАЛИВА':'VIITORUL LÂNGĂ GOLF','ЭНОСИМА: ОСТРОВ ДРАКОНА':'ENOSHIMA: INSULA DRAGONULUI','Токио → Fujisawa → Enoshima → Hase':'Tokyo → Fujisawa → Enoshima → Hase',
-      'КАМАКУРА: БУДДА И МОРЕ':'KAMAKURA: BUDDHA ȘI MAREA','ПРОВОДНИКИ':'GHIZII','ЧТО ВХОДИТ':'CE ESTE INCLUS','ОТДЕЛЬНО':'SE PLĂTEȘTE SEPARAT',
-      'ИНВЕНТАРЬ ПУТЕШЕСТВЕННИКА':'ECHIPAMENTUL CĂLĂTORULUI','Для города, экскурсий и пляжа':'Pentru oraș, excursii și plajă','Для восхождения на Фудзи':'Pentru ascensiunea pe Fuji',
-      'ВАША ПОЕЗДКА В ЯПОНИЮ':'CĂLĂTORIA VOASTRĂ ÎN JAPONIA','7–15 сентября 2026. Напишите нам, чтобы получить детали, стоимость и забронировать место в группе':'7–15 septembrie 2026. Scrieți-ne pentru detalii, preț și rezervarea unui loc în grup',
-      'План может меняться из-за погоды, транспорта, часов работы мест и пожеланий группы':'Planul se poate schimba în funcție de vreme, transport, programul locurilor și dorințele grupului'
+    '1':{
+      ru:['CHAPTER 1 • 7 сентября','ТОКИО: ПЕРВЫЙ КАДР','Прилёт → заселение → Уэно → Синдзюку','Мягко войдём в ритм Токио: парк Уэно, торговые улочки Амэёко и вечерний Синдзюку с экранами, небоскрёбами и 3D-котом.'],
+      en:['CHAPTER 1 • 7 September','TOKYO: THE FIRST FRAME','Arrival → check-in → Ueno → Shinjuku','Ease into Tokyo: Ueno Park, Ameyoko shopping streets and evening Shinjuku with screens, skyscrapers and its 3D cat.'],
+      ro:['CHAPTER 1 • 7 septembrie','TOKYO: PRIMUL CADRU','Sosire → cazare → Ueno → Shinjuku','Intrăm ușor în ritmul Tokyo: parcul Ueno, străduțele comerciale Ameyoko și Shinjuku de seară cu ecrane, zgârie-nori și pisica 3D.']
+    },
+    '2':{
+      ru:['CHAPTER 2 • 8 сентября','ФУДЗИ И КАВАГУЧИКО','Токио → район Фудзи → озеро Кавагучико','Открыточные виды из Oishi Park, прогулка у озера, опциональная лодка и музей кукол Юки Атаэ. Ночуем у Фудзи.'],
+      en:['CHAPTER 2 • 8 September','FUJI AND KAWAGUCHIKO','Tokyo → Fuji area → Lake Kawaguchiko','Postcard views from Oishi Park, a lakeside walk, an optional boat ride and the Yuki Atae Doll Museum. Overnight near Fuji.'],
+      ro:['CHAPTER 2 • 8 septembrie','FUJI ȘI KAWAGUCHIKO','Tokyo → zona Fuji → lacul Kawaguchiko','Priveliști de carte poștală din Oishi Park, plimbare pe lângă lac, barcă opțională și muzeul păpușilor Yuki Atae. Dormim lângă Fuji.']
+    },
+    '3':{
+      ru:['SPECIAL CHAPTER • 9 сентября','ВОСХОЖДЕНИЕ НА ФУДЗИ','ИДЕМ К ВЕРШИНЕ!','Ранний выход на маршрут Yoshida, восхождение, прогулка вокруг кратера над облаками, спуск и возвращение в Кавагучико. (Маршрут проходим при подходящей погоде и открытой трассе)','После возвращения: отдых и восстановление в традиционном японском доме в Кавагучико.'],
+      en:['SPECIAL CHAPTER • 9 September','ASCENT OF MOUNT FUJI','WE CLIMB TO THE SUMMIT!','Early start on the Yoshida Trail, ascent, a walk around the crater above the clouds, descent and return to Kawaguchiko. (The route is taken only in suitable weather and when the trail is open.)','After the return: rest and recovery in a traditional Japanese house in Kawaguchiko.'],
+      ro:['SPECIAL CHAPTER • 9 septembrie','ASCENSIUNEA PE FUJI','URCĂM SPRE VÂRF!','Pornire devreme pe traseul Yoshida, ascensiune, plimbare în jurul craterului deasupra norilor, coborâre și întoarcere în Kawaguchiko. (Parcurgem traseul doar pe vreme potrivită și când ruta este deschisă.)','După întoarcere: odihnă și recuperare într-o casă japoneză tradițională din Kawaguchiko.']
+    },
+    '4':{
+      ru:['CHAPTER 4 • 10 сентября','ТОКИО: ТИШИНА И НЕОН','Кавагучико → Токио → Мэйдзи → Акихабара','Лесное святилище Мэйдзи рядом с Харадзюку, затем Акихабара: электроника, игры, манга и ночные вывески.'],
+      en:['CHAPTER 4 • 10 September','TOKYO: QUIET AND NEON','Kawaguchiko → Tokyo → Meiji → Akihabara','Forest-shaded Meiji Shrine near Harajuku, then Akihabara: electronics, games, manga and neon signs.'],
+      ro:['CHAPTER 4 • 10 septembrie','TOKYO: LINIȘTE ȘI NEON','Kawaguchiko → Tokyo → Meiji → Akihabara','Sanctuarul Meiji, înconjurat de pădure lângă Harajuku, apoi Akihabara: electronică, jocuri, manga și reclame de noapte.']
+    },
+    '5':{
+      ru:['CHAPTER 5 • 11 сентября','СТАРЫЙ ТОКИО / НОВЫЙ ТОКИО','Асакуса → Skytree → Сибуя → Гинза','Сэнсодзи и Nakamise-dori, вид с Tokyo Skytree, диагональный перекрёсток Сибуи и элегантная вечерняя Гинза.'],
+      en:['CHAPTER 5 • 11 September','OLD TOKYO / NEW TOKYO','Asakusa → Skytree → Shibuya → Ginza','Senso-ji and Nakamise-dori, Tokyo Skytree views, Shibuya Crossing and elegant evening Ginza.'],
+      ro:['CHAPTER 5 • 11 septembrie','TOKYO VECHI / TOKYO NOU','Asakusa → Skytree → Shibuya → Ginza','Senso-ji și Nakamise-dori, priveliștea din Tokyo Skytree, intersecția Shibuya și eleganta Ginza de seară.']
+    },
+    '6':{
+      ru:['CHAPTER 6 • 12 сентября','БУДУЩЕЕ У ЗАЛИВА','TeamLab → Toyosu → Odaiba → Miraikan','Цифровое искусство TeamLab, свежая рыба в Toyosu Senkyaku Banrai, футуристическая Одайба и Geo-Cosmos в музее будущего. Вечером по желанию: онсен Tokyo Toyosu Manyo Club.'],
+      en:['CHAPTER 6 • 12 September','THE FUTURE BY THE BAY','TeamLab → Toyosu → Odaiba → Miraikan','TeamLab digital art, fresh fish at Toyosu Senkyaku Banrai, futuristic Odaiba and Geo-Cosmos at the Museum of the Future. Optional evening: Tokyo Toyosu Manyo Club onsen.'],
+      ro:['CHAPTER 6 • 12 septembrie','VIITORUL LÂNGĂ GOLF','TeamLab → Toyosu → Odaiba → Miraikan','Arta digitală TeamLab, pește proaspăt la Toyosu Senkyaku Banrai, Odaiba futuristă și Geo-Cosmos la muzeul viitorului. Seara, opțional: onsen Tokyo Toyosu Manyo Club.']
+    },
+    '7':{
+      ru:['CHAPTER 7 • 13 сентября','ЭНОСИМА: ОСТРОВ ДРАКОНА','Токио → Fujisawa → Enoshima → Hase','Легендарный поезд Enoden, пляж, мост на остров, святилища Бэнтэн, Sea Candle, пещеры Iwaya и shirasu-don. К вечеру заселяемся в тихий Hase у моря.'],
+      en:['CHAPTER 7 • 13 September','ENOSHIMA: DRAGON ISLAND','Tokyo → Fujisawa → Enoshima → Hase','The legendary Enoden train, beach, island bridge, Benzaiten shrines, Sea Candle, Iwaya caves and shirasu-don. By evening, we settle into quiet Hase by the sea.'],
+      ro:['CHAPTER 7 • 13 septembrie','ENOSHIMA: INSULA DRAGONULUI','Tokyo → Fujisawa → Enoshima → Hase','Trenul legendar Enoden, plaja, podul spre insulă, sanctuarele Benzaiten, Sea Candle, peșterile Iwaya și shirasu-don. Spre seară ne cazăm în liniștitul Hase, lângă mare.']
+    },
+    '8':{
+      ru:['CHAPTER 8 • 14 сентября','КАМАКУРА: БУДДА И МОРЕ','Hase → Kamakura → Ōfuna → Hase','Великий Будда, Hase-dera, Komachi-dori, Hachimangu, бамбук Hokokuji и белая Ōfuna Kannon. Затем несколько часов у Yuigahama и прощальный вечер.'],
+      en:['CHAPTER 8 • 14 September','KAMAKURA: BUDDHA AND SEA','Hase → Kamakura → Ōfuna → Hase','Great Buddha, Hase-dera, Komachi-dori, Hachimangu, Hokokuji bamboo grove and white Ōfuna Kannon. Then a few hours at Yuigahama and a farewell evening.'],
+      ro:['CHAPTER 8 • 14 septembrie','KAMAKURA: BUDDHA ȘI MAREA','Hase → Kamakura → Ōfuna → Hase','Marele Buddha, Hase-dera, Komachi-dori, Hachimangu, pădurea de bambus Hokokuji și statuia albă Ōfuna Kannon. Apoi câteva ore la Yuigahama și o seară de rămas-bun.']
+    },
+    '9':{
+      ru:['FINAL CHAPTER • 15 сентября','ДОМОЙ, С ПОЛНЫМ ЧЕМОДАНОМ ПОДАРКОВ И ВПЕЧАТЛЕНИЙ','Hase / Kamakura → Yokohama → Haneda','Ранний выезд через Йокогаму, запас на регистрацию, последние покупки и вылет домой.'],
+      en:['FINAL CHAPTER • 15 September','HOME, WITH A SUITCASE FULL OF GIFTS AND MEMORIES','Hase / Kamakura → Yokohama → Haneda','Early departure via Yokohama, time for check-in, last shopping and the flight home.'],
+      ro:['FINAL CHAPTER • 15 septembrie','ACASĂ, CU O VALIZĂ PLINĂ DE CADOURI ȘI AMINTIRI','Hase / Kamakura → Yokohama → Haneda','Plecare devreme prin Yokohama, timp suficient pentru check-in, ultimele cumpărături și zborul spre casă.']
     }
   };
 
-  function normalize(s){return String(s||'').replace(/\s+/g,' ').trim();}
+  var ui={
+    en:{route:'ROUTE',guides:'GUIDES',details:'DETAILS',join:'JOIN THE GROUP',chapters:'ITINERARY CHAPTERS',soundOn:'🔊 SOUND: ON',soundOff:'🔇 SOUND: OFF'},
+    ro:{route:'TRASEU',guides:'GHIZI',details:'DETALII',join:'VREAU ÎN GRUP',chapters:'CAPITOLELE ITINERARULUI',soundOn:'🔊 SUNET: PORNIT',soundOff:'🔇 SUNET: OPRIT'},
+    ru:{route:'маршрут',guides:'проводники',details:'условия',join:'ХОЧУ В ГРУППУ',chapters:'ГЛАВЫ МАРШРУТА',soundOn:'🔊 ЗВУК: ВКЛ',soundOff:'🔇 ЗВУК: ВЫКЛ'}
+  };
 
-  function getDay(button){
-    if(button.dataset.day) return button.dataset.day;
-    var text=button.dataset.ruText||button.textContent.trim();
-    return text.indexOf('★')===0?'3':((text.match(/^([0-9]+)/)||[])[1]);
-  }
+  var tabLabels={
+    ru:['0 · ПЕРЕЛЁТ','1 · ТОКИО','2 · КАВАГУЧИКО','★ ФУДЗИ','4 · МЭЙДЗИ','5 · АСАКУСА','6 · TeamLab','7 · ЭНОСИМА','8 · КАМАКУРА','9 · ДОМОЙ'],
+    en:['0 · FLIGHT','1 · TOKYO','2 · KAWAGUCHIKO','★ FUJI','4 · MEIJI','5 · ASAKUSA','6 · TeamLab','7 · ENOSHIMA','8 · KAMAKURA','9 · HOME'],
+    ro:['0 · ZBOR','1 · TOKYO','2 · KAWAGUCHIKO','★ FUJI','4 · MEIJI','5 · ASAKUSA','6 · TeamLab','7 · ENOSHIMA','8 · KAMAKURA','9 · ACASĂ']
+  };
 
   function installVideos(){
     videoDays.forEach(function(day){
       var chapter=document.querySelector('.chapter[data-chapter="'+day+'"]');
-      if(!chapter) return;
+      if(!chapter)return;
       var panel=chapter.querySelector('.panel-grid > div:last-child');
-      if(!panel) return;
-      panel.style.padding='0'; panel.style.overflow='hidden';
-      panel.innerHTML='<video muted loop playsinline controls preload="metadata" style="display:block;width:100%;height:auto;min-height:0;aspect-ratio:16/9;object-fit:contain;background:#000"><source src="assets/day-'+day+'-v2.mp4?v=7" type="video/mp4"><source src="assets/day-'+day+'.mp4?v=7" type="video/mp4"></video>';
+      if(!panel)return;
+      panel.style.padding='0';panel.style.overflow='hidden';
+      panel.innerHTML='<video muted loop playsinline controls preload="metadata" style="display:block;width:100%;height:auto;aspect-ratio:16/9;object-fit:contain;background:#000"><source src="assets/day-'+day+'-v2.mp4?v=8" type="video/mp4"><source src="assets/day-'+day+'.mp4?v=8" type="video/mp4"></video>';
     });
   }
 
@@ -82,76 +86,61 @@
       if(active){video.muted=!soundOn;video.volume=1;try{var p=video.play();if(p&&p.catch)p.catch(function(){});}catch(e){}}
       else{video.muted=true;try{video.pause();}catch(e){}}
     });
-    var sound=document.getElementById('site-sound-toggle');
-    if(sound){
-      sound.style.display='';
-      sound.textContent=soundOn?(currentLang==='en'?'🔊 SOUND: ON':currentLang==='ro'?'🔊 SUNET: PORNIT':'🔊 ЗВУК: ВКЛ'):(currentLang==='en'?'🔇 SOUND: OFF':currentLang==='ro'?'🔇 SUNET: OPRIT':'🔇 ЗВУК: ВЫКЛ');
-      sound.setAttribute('aria-pressed',String(soundOn));
-    }
+    var btn=document.getElementById('site-sound-toggle');
+    if(btn){btn.style.display='';btn.textContent=soundOn?ui[currentLang].soundOn:ui[currentLang].soundOff;btn.setAttribute('aria-pressed',String(soundOn));}
   }
 
   function activateChapter(day,button){
     day=String(day);
     document.querySelectorAll('.chapter[data-chapter]').forEach(function(ch){ch.hidden=ch.dataset.chapter!==day;});
     document.querySelectorAll('.day-tab').forEach(function(tab){tab.setAttribute('aria-selected','false');tab.classList.remove('red');});
-    if(button){button.setAttribute('aria-selected','true');if(day==='3')button.classList.add('red');var label=document.getElementById('chapter-label');if(label)label.textContent=button.textContent.replace('★ ',currentLang==='ru'?'ДЕНЬ ':currentLang==='ro'?'ZIUA ':'DAY ');}
+    if(button){button.setAttribute('aria-selected','true');if(day==='3')button.classList.add('red');}
+    updateChapterLabel(day);
     syncMedia();
   }
 
-  function rememberRussian(){
-    document.querySelectorAll('body h1,body h2,body h3,body p,body b,body a,body button,body li,body small,body span.marker').forEach(function(node){
-      if(node.id==='site-sound-toggle')return;
-      if(!node.dataset.ruText)node.dataset.ruText=normalize(node.textContent);
-      if(!node.dataset.ruHtml)node.dataset.ruHtml=node.innerHTML;
-    });
+  function updateChapterLabel(day){
+    var label=document.getElementById('chapter-label');
+    if(!label)return;
+    var idx=Number(day);var text=tabLabels[currentLang][idx]||'';
+    if(day==='3') label.textContent=(currentLang==='ru'?'ДЕНЬ ':'DAY ')+text.replace('★ ','');
+    else label.textContent=(currentLang==='ru'?'ДЕНЬ ':'DAY ')+text;
   }
 
-  function translateNode(node,lang){
-    if(node.id==='site-sound-toggle'||node.hasAttribute('data-site-lang'))return;
-    if(lang==='ru'){if(node.dataset.ruHtml)node.innerHTML=node.dataset.ruHtml;return;}
-    var key=node.dataset.ruText;
-    var value=translations[lang]&&translations[lang][key];
-    if(value)node.textContent=value;
+  function translateCard(day,lang){
+    var chapter=document.querySelector('.chapter[data-chapter="'+day+'"]');
+    var t=cardTranslations[day]&&cardTranslations[day][lang];
+    if(!chapter||!t)return;
+    var meta=chapter.querySelector(':scope > p.display'); if(meta)meta.textContent=t[0];
+    var title=chapter.querySelector(':scope > h3'); if(title)title.textContent=t[1];
+    if(day==='3'){
+      var special=chapter.querySelector('.border-red-500');
+      if(special){var spTitle=special.querySelector('p.display');if(spTitle){var height=spTitle.querySelector('span');spTitle.childNodes[0].nodeValue=t[2];if(height)height.textContent='3 776 M';}var desc=special.querySelector('p.mt-3');if(desc)desc.textContent=t[3];}
+      var after=chapter.querySelector(':scope > p.mt-5');if(after)after.textContent=t[4];
+    }else{
+      var first=chapter.querySelector('.panel-grid > div:first-child');
+      if(first){var b=first.querySelector('b');if(b)b.textContent=t[2];var p=first.querySelector('p');if(p)p.textContent=t[3];}
+    }
   }
 
   function applyLanguage(lang){
-    if(!translations[lang]&&lang!=='ru')lang='ru';
-    currentLang=lang;
-    document.documentElement.lang=lang;
-    document.querySelectorAll('body h1,body h2,body h3,body p,body b,body a,body button,body li,body small,body span.marker').forEach(function(node){translateNode(node,lang);});
-
-    var hero=document.querySelector('.hero h1');
-    if(hero){
-      if(lang==='en')hero.innerHTML='JAPAN<br><span class="text-[var(--red)]">FIRST</span><br>ENCOUNTER!';
-      else if(lang==='ro')hero.innerHTML='JAPONIA<br><span class="text-[var(--red)]">PRIMA</span><br>ÎNTÂLNIRE!';
-      else if(hero.dataset.ruHtml)hero.innerHTML=hero.dataset.ruHtml;
-    }
-    var burst=document.querySelector('.burst');
-    if(burst){
-      if(!burst.dataset.ruHtml)burst.dataset.ruHtml=burst.innerHTML;
-      if(lang==='en')burst.innerHTML='<span class="display text-3xl">SPECIAL EDITION</span><span class="text-xl">ASCENT OF<br>MOUNT FUJI</span><small>3,776 m</small>';
-      else if(lang==='ro')burst.innerHTML='<span class="display text-3xl">EDIȚIE SPECIALĂ</span><span class="text-xl">ASCENSIUNEA<br>PE FUJI</span><small>3.776 m</small>';
-      else burst.innerHTML=burst.dataset.ruHtml;
-    }
-
-    document.querySelectorAll('[data-site-lang]').forEach(function(b){var on=b.dataset.siteLang===lang;b.classList.toggle('bg-black',on);b.classList.toggle('text-white',on);b.classList.toggle('bg-white',!on);});
-    try{localStorage.setItem('japan2026-language',lang);}catch(e){}
+    currentLang=lang;localStorage.setItem('japan2026-language',lang);document.documentElement.lang=lang;
+    document.querySelectorAll('.chapter[data-chapter]').forEach(function(ch){translateCard(ch.dataset.chapter,lang);});
+    var tabs=document.querySelectorAll('.day-tab');tabs.forEach(function(tab,i){tab.textContent=tabLabels[lang][i];tab.dataset.day=String(i);});
+    var nav=document.querySelectorAll('header nav a');if(nav[0])nav[0].textContent=ui[lang].route;if(nav[1])nav[1].textContent=ui[lang].guides;if(nav[2])nav[2].textContent=ui[lang].details;
+    var join=document.querySelector('header a[href="#request"]');if(join)join.textContent=ui[lang].join;
+    var routeTitle=document.querySelector('#route h2.display');if(routeTitle)routeTitle.textContent=ui[lang].chapters;
+    document.querySelectorAll('[data-site-lang]').forEach(function(b){var active=b.dataset.siteLang===lang;b.style.display='';b.classList.toggle('bg-black',active);b.classList.toggle('text-white',active);b.classList.toggle('bg-white',!active);});
+    var active=document.querySelector('.day-tab[aria-selected="true"]')||document.querySelector('.day-tab');if(active)updateChapterLabel(active.dataset.day||'0');
     syncMedia();
   }
 
-  function bindTabs(){document.querySelectorAll('.day-tab').forEach(function(button){button.dataset.day=getDay(button);button.onclick=function(e){if(e)e.preventDefault();activateChapter(button.dataset.day,button);return false;};});}
-  function bindSound(){var sound=document.getElementById('site-sound-toggle');if(!sound)return;sound.style.display='';sound.onclick=function(e){if(e)e.preventDefault();soundOn=!soundOn;syncMedia();return false;};}
-  function bindLanguages(){document.querySelectorAll('[data-site-lang]').forEach(function(button){button.style.display='';button.onclick=function(e){if(e)e.preventDefault();applyLanguage(button.dataset.siteLang);return false;};});}
-
-  function boot(){
-    installVideos();
-    rememberRussian();
-    bindTabs();bindSound();bindLanguages();
-    window.showChapter=activateChapter;
-    window.applySiteLanguage=applyLanguage;
-    var saved='ru';try{saved=localStorage.getItem('japan2026-language')||'ru';}catch(e){}
-    applyLanguage(saved);
-    var active=document.querySelector('.day-tab[aria-selected="true"]')||document.querySelector('.day-tab');if(active)activateChapter(getDay(active),active);
+  function bind(){
+    document.querySelectorAll('.day-tab').forEach(function(button,i){button.dataset.day=String(i);button.onclick=function(e){if(e)e.preventDefault();activateChapter(button.dataset.day,button);return false;};});
+    var sound=document.getElementById('site-sound-toggle');if(sound){sound.style.display='';sound.onclick=function(e){if(e)e.preventDefault();soundOn=!soundOn;syncMedia();return false;};}
+    document.querySelectorAll('[data-site-lang]').forEach(function(button){button.style.display='';button.onclick=function(e){if(e)e.preventDefault();applyLanguage(button.dataset.siteLang);return false;};});
   }
+
+  function boot(){installVideos();bind();applyLanguage(currentLang);window.showChapter=activateChapter;var active=document.querySelector('.day-tab[aria-selected="true"]')||document.querySelector('.day-tab');if(active)activateChapter(active.dataset.day||'0',active);}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
 })();
