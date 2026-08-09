@@ -12,12 +12,13 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: main
-      - name: Update text
+      - name: Update text and Fuji runtime
         run: |
           python3 - <<'PY'
           from pathlib import Path
           p=Path('tabs.js')
           s=p.read_text()
+          s=s.replace("var videoDays=['0','1','2','4','5','6','7','8','9'];","var videoDays=['0','1','2','3','4','5','6','7','8','9'];")
           replacements={
             "requestTitle:'ВАШ КАДР В ЯПОНИИ'":"requestTitle:'ВАШ ПУТЬ В ЯПОНИЮ!'",
             "requestTitle:'YOUR JAPAN FRAME'":"requestTitle:'YOUR JOURNEY TO JAPAN!'",
@@ -28,8 +29,7 @@ jobs:
           p.write_text(s)
 
           p=Path('index.html')
-          s=p.read_text()
-          s=s.replace('ANDREY KHOHLOV','ANDREI HOHLOV').replace('ALEXEY IVANTSOV','ALEXEI IVANTOV')
+          s=p.read_text().replace('ANDREY KHOHLOV','ANDREI HOHLOV').replace('ALEXEY IVANTSOV','ALEXEI IVANTOV')
           p.write_text(s)
           PY
       - name: Commit
@@ -37,5 +37,5 @@ jobs:
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           git add tabs.js index.html
-          git commit -m "Fix organizer names in all language states" || true
+          git commit -m "Enable Fuji video and finalize organizer names" || true
           git push origin main
