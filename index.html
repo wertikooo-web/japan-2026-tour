@@ -24,14 +24,19 @@
 <body>
 <div class="boot">JAPAN 2026</div>
 <script>
-fetch('legacy.html?v=4',{cache:'no-store'})
+fetch('legacy.html?v=5',{cache:'no-store'})
   .then(function(r){if(!r.ok) throw new Error('legacy '+r.status); return r.text();})
   .then(function(html){
-    var injection='<script src="site-fix.js?v=4"><\\/script>';
+    var injection='<script src="site-fix.js?v=5"></'+'script>';
     html=html.replace('</body>',injection+'</body>');
-    document.open();document.write(html);document.close();
+    document.open();
+    document.write(html);
+    document.close();
   })
-  .catch(function(err){document.body.innerHTML='<main style="padding:30px;font-family:Arial"><h1>Japan 2026</h1><p>Страница временно не загрузилась. Обновите её ещё раз.</p></main>';console.error(err);});
+  .catch(function(err){
+    document.body.innerHTML='<main style="padding:30px;font-family:Arial"><h1>Japan 2026</h1><p>Страница временно не загрузилась. Обновите её ещё раз.</p></main>';
+    console.error(err);
+  });
 </script>
 </body>
 </html>
