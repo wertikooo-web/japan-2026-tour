@@ -5,6 +5,7 @@
     '0':['assets/day-0-v2.mp4?v=4','assets/day-0.mp4?v=4'],
     '1':['assets/day-1-v2.mp4?v=4','assets/day-1.mp4?v=4'],
     '2':['assets/day-2-v2.mp4?v=4','assets/day-2.mp4?v=4'],
+    '3':['assets/day-3-v2.mp4?v=5','assets/Fuji.mp4?v=5'],
     '4':['assets/day-4-v2.mp4?v=4','assets/day-4.mp4?v=4'],
     '5':['assets/day-5-v2.mp4?v=4','assets/day-5.mp4?v=4'],
     '6':['assets/day-6-v2.mp4?v=4','assets/day-6.mp4?v=4'],
