@@ -5,7 +5,7 @@
     '0':['assets/day-0-v2.mp4?v=4','assets/day-0.mp4?v=4'],
     '1':['assets/day-1-v2.mp4?v=4','assets/day-1.mp4?v=4'],
     '2':['assets/day-2-v2.mp4?v=4','assets/day-2.mp4?v=4'],
-    '3':['assets/day-3-v2.mp4?v=5','assets/Fuji.mp4?v=5'],
+    '3':['assets/Fuji.mp4?v=20260810-fuji6','assets/day-3-v2.mp4?v=20260810-fuji6'],
     '4':['assets/day-4-v2.mp4?v=4','assets/day-4.mp4?v=4'],
     '5':['assets/day-5-v2.mp4?v=4','assets/day-5.mp4?v=4'],
     '6':['assets/day-6-v2.mp4?v=4','assets/day-6.mp4?v=4'],
@@ -34,6 +34,16 @@
     video.style.background='#000';
   }
 
+  function ensureVideoForDay3(){
+    var chapter=document.querySelector('.chapter[data-chapter="3"]');
+    if(!chapter) return;
+    var existing=chapter.querySelector('video');
+    if(existing) return;
+    var media=chapter.querySelector('.panel-grid > div:last-child');
+    if(!media) return;
+    media.innerHTML='<video muted loop playsinline controls preload="metadata"><source src="assets/Fuji.mp4?v=20260810-fuji6" type="video/mp4"></video>';
+  }
+
   function configureFallback(video){
     var chapter=video.closest('.chapter');
     if(!chapter) return;
@@ -44,7 +54,12 @@
     video.dataset.fallbackIndex='0';
 
     var source=video.querySelector('source');
-    if(source && source.getAttribute('src')!==choices[0]){
+    if(!source){
+      source=document.createElement('source');
+      source.type='video/mp4';
+      video.appendChild(source);
+    }
+    if(source.getAttribute('src')!==choices[0]){
       source.setAttribute('src',choices[0]);
       video.load();
     }
@@ -79,6 +94,7 @@
   }
 
   function syncPlayback(){
+    ensureVideoForDay3();
     var active=activeChapter();
     document.querySelectorAll('.chapter video').forEach(function(video){
       normalizeVideo(video);
@@ -111,6 +127,7 @@
   function install(){
     removeLegacySoundtracks();
     addResilienceStyles();
+    ensureVideoForDay3();
 
     document.querySelectorAll('.chapter video').forEach(function(video){
       normalizeVideo(video);
